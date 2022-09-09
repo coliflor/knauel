@@ -1,0 +1,56 @@
+* Knauel
+
+A tool to cluster config files in a single file
+[[knauel][file:knauel.png]]
+
+The purpose of this script is to write all your config files in a single
+  centralized file and the program will create the separated
+  files making it simpler to share your setups or configure several small files.
+
+  It utilizes the emacs org-mode tags \n#%+begin_src\n and \n#%+end_src\n .
+  Unlike org-mode this tags don't support parameters and being with a line break.
+
+** Install
+
+*** Atrix Linux
+
+First install the dependencies:
+ #+begin_src
+pacman -S luarocks git
+luarocks install luastatic
+ #+end_src
+
+Clone this repo and cd into the directory:
+#+begin_src
+git clone <this repo>
+cd <this repo>
+#+end_src
+
+Then run:
+ #+begin_src
+make
+make install
+ #+end_src
+
+The make file provides a clean and uninstall command.
+
+** Configure
+
+Knauel works by putting your config files inside an org-mode file that contains code blocks, those code blocks will represent each configuration file. Knauel will parse those code blocks to create individual files that then will be linked to the destination file. Code Blocks have to start with a /newline and end with /newline or else they will be ignored.
+
+opening code block:
+\n#+begin_src\n
+
+closing code block:
+	\n#+end_src\n
+
+	For the program to know where to link the specific config file you have to put the destination path inside the code block by using double brackets as opening token and double brackets as closing token.
+
+	For a better understanding of how it works check the sample file sample.org
+
+* Usage
+
+For how to use knauel simple run:
+#+begin_src
+knauel
+#+end_src
