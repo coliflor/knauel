@@ -48,7 +48,7 @@ end
 local file = f.readall(path)
 
 -- Finds the corresponding tokens in file
-function insert_tokens()
+local function insert_tokens()
 	 local token = "\n#%+begin_src\n"
 	 local t = {}; local x = 1; local y = 1; local i = -1
 	 while x ~= nil and y ~= nil  do
@@ -66,15 +66,16 @@ function insert_tokens()
 end
 
 -- extract text and put it in a separate table
-function extract_data()
+local function extract_data(t, t_total)
 	 local x=1; local files = {}; local filename
+	 local z, y
 	 for i=1, t_total, 2 do
 			if string.sub(file, t[x][3]+1, t[x][3]+2) == "[[" then
 				 z, y = file:find("]]", t[x][3]+3)
 				 if z ~= nil or y ~= nil then
 						if y > t[x+1][2]-1 then
 							 io.write(y .. " " .. t[x+1][2]-1 .. "\n")
-							 io.write("warrn: no codeblock found \n")
+							 io.write(i ..": warrn: no codeblock found \n")
 							 y = t[x][3]-1
 							 filename = "empty"
 						else
@@ -98,20 +99,20 @@ function extract_data()
 end
 
 -- write config files into disc
-function write_files(files)
+local function write_files(t_total, files)
 
 	 local f_total = t_total/2
 	 for i=1, f_total, 1 do
-			local file
+			local file2
 			if f.filename(files[i][1]) == nil then
-				 file = files[i][1]
+				 file2 = files[i][1]
 			else
-				 file = f.filename(files[i][1])
+				 file2 = f.filename(files[i][1])
 			end
-			local filename = f.dirname(path) .. file
+			local filename = f.dirname(path) .. file2
 			f.write(filename, files[i][2])
 			io.write("file created: ".. filename .."\n")
-			if  args.link == true and file ~= files[i][1] then
+			if  args.link == true and file2 ~= files[i][1] then
 				 local err = os.execute("ln -s " .. filename .. " " .. files[i][1])
 				 if err == nil then
 						err = ""
@@ -125,17 +126,17 @@ function write_files(files)
 end
 
 -- clean files and links
-function clean_files(files)
+local function clean_files(t_total, files)
 
 	 local f_total = t_total/2
 	 for i=1, f_total, 1 do
-			local file
+			local file2
 			if f.filename(files[i][1]) == nil then
-				 file = files[i][1]
+				 file2 = files[i][1]
 			else
-				 file = f.filename(files[i][1])
+				 file2 = f.filename(files[i][1])
 			end
-			local filename = f.dirname(path) .. file
+			local filename = f.dirname(path) .. file2
 			os.execute("rm " ..  filename)
 			io.write("file deleted: ".. filename.."\n")
 			if  args.link == true  then
@@ -151,7 +152,7 @@ function clean_files(files)
 	 end
 end
 
-t, t_total = insert_tokens()
+local t, t_total = insert_tokens()
 
 if t_total == 0 then
 	 io.write("error: no valid tokens found \n")
@@ -162,10 +163,10 @@ if t_total % 2  ~= 0 then
 	 io.write("error: missing a closure token\n")
 	 os.exit()
 end
-local files = extract_data()
+local files = extract_data(t, t_total)
 
 if args.remove == true then
-	 clean_files(files)
+	 clean_files(t_total, files)
 else
-	 write_files(files)
+	 write_files(t_total, files)
 end
