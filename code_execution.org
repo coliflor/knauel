@@ -1,0 +1,14 @@
+
+#+begin_code
+return function() print('empty file') file = "" end
+#+end_code
+
+
+* Sample file
+
+This an example on how to use Knauel
+
+#+begin_src
+[[~/.sample]]
+this is and example on how to use Knauel
+#+end_src

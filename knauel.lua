@@ -16,7 +16,7 @@ local parser   = argparse()
 
 local default_dir = os.getenv("HOME").."/.knauel/"
 parser:option("-c --config", "Config file. ", default_dir.."knauel.org")
-local version = "version v 0.0.1"
+local version = "version v 0.1.0"
 parser:flag("-v --version", version)
 parser:flag("-r --remove", "clean files and links if -l is set")
 parser:flag("-l --link", "links the created files to their paths")
@@ -28,7 +28,6 @@ if  args.version == true then
 	 io.write(version .. "\n")
 	 os.exit()
 end
-
 
 
 -- Check if file exists, if not fall back to default file
@@ -45,7 +44,7 @@ if (f.file_exists(path)) == false then
 end
 
 -- Read file
-local file = f.readall(path)
+file = f.readall(path)
 
 -- Finds the corresponding tokens in file
 local function insert_tokens()
@@ -64,6 +63,7 @@ local function insert_tokens()
 	 table.remove(t)
 	 return t, i
 end
+
 
 -- extract text and put it in a separate table
 local function extract_data(t, t_total)
@@ -98,6 +98,7 @@ local function extract_data(t, t_total)
 	 return files
 end
 
+
 -- write config files into disc
 local function write_files(t_total, files)
 
@@ -125,6 +126,7 @@ local function write_files(t_total, files)
 	 end
 end
 
+
 -- clean files and links
 local function clean_files(t_total, files)
 
@@ -150,6 +152,41 @@ local function clean_files(t_total, files)
 				 io.write("\n")
 			end
 	 end
+end
+
+
+local function execute_string_function(str)
+	 local fn, err = loadstring(str)
+	 if fn == nil then
+			error(err)
+	 else
+			return fn()
+	 end
+end
+
+
+local function parse_text_between_tags(text, startTag, endTag)
+	 local startPos, endPos = string.find(text, startTag)
+	 if not startPos then
+			return ""
+	 end
+
+	 startPos = endPos + 1 -- exclude the start tag itself
+
+	 endPos, _ = string.find(text, endTag, startPos)
+	 if not endPos then
+			return ""
+	 end
+
+	 return string.sub(text, startPos, endPos - 1)
+end
+
+local code = parse_text_between_tags(file, "\n#%+begin_code\n", "\n#%+end_code\n")
+if code  ~= "" then
+	 --io.write(code)
+	 io.write("code block found! executing code\n")
+	 local fn = execute_string_function(code)
+	 io.write(fn())
 end
 
 local t, t_total = insert_tokens()
