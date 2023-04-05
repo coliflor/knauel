@@ -9,7 +9,13 @@ local parser   = argparse()
   files making it simpler to share your setups or configure several small files.
 
   It utilizes the emacs org-mode tags \n#%+begin_src\n and \n#%+end_src\n .
-  Unlike org-mode this tags don't support parameters and being with a line break.
+  Unlike org-mode this tags don't support parameters and being and end with a
+  line break.
+
+  You can run your own custom functions to alter the file before its parsed by
+  creating a code block \n#%+begin_code\n and \n#%+end_code\n and putting your
+  lua function inside those tags, the code can alter the global variable “file”
+  to the desired output. See the example code_execution.org
 
 ]]
    :epilog "  Author: beemo.ceniza@gmail.com"
