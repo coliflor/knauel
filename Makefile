@@ -6,7 +6,8 @@ PREFIX ?= /usr/local
 BINDIR ?= $(PREFIX)/bin
 DESKTOP_DIR ?= $(PREFIX)/share/applications
 
-SRC = knauel.lua argparse.lua file.lua
+# important! first file is the name of the entry point
+SRC = knauel.lua lib/knauel.lua lib/argparse.lua lib/file.lua
 
 knauel:
 	$(LUASTATIC) $(SRC) -l$(LUA) -I$(LUA_INCLUDE)
