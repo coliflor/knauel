@@ -1,16 +1,29 @@
 
 #+begin_code
 return function()
-function removeLinesWithPattern(text, pattern)
-    local lines = {}
-		for line in text:gmatch("([^\r\n]*)[\r\n]*") do
-        if not line:match("^" .. pattern) then
-            table.insert(lines, line)
+function replaceLinesWithPattern(text, pattern, replacement)
+    local result = text:gsub("(.-\n)",
+        function(line)
+            if line:match("^" .. pattern) then
+                return replacement .. "\n"
+            else
+                return line
+            end
         end
-    end
-    return table.concat(lines, "\n")
+    )
+    return result
 end
-file = removeLinesWithPattern(file, ";;")
+
+function replaceWord(text, targetWord, replacement)
+    local pattern = "%f[%a]" .. targetWord .. "%f[%A]"
+    return text:gsub(pattern, replacement)
+end
+
+file = replaceLinesWithPattern(file, ";;", "")
+file = replaceLinesWithPattern(file, "##", "")
+
+file = replaceWord(file, "white" , '#ffffff')
+
 print(file)
 end
 #+end_code
@@ -25,4 +38,11 @@ This an example on how to use Knauel
 [[~/.sample]]
 ;; this is a comment that should get removed
 this is and example on how to use Knauel
+#+end_src
+
+
+#+begin_src
+[[~/.sample_two]]
+## this is a comment that should get removed
+color: white
 #+end_src
