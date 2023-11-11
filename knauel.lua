@@ -1,4 +1,3 @@
---local pl       = require 'pl.pretty' -- pl.dump(tn)
 local argparse = require "lib.argparse"
 local f        = require "lib.file"
 local k = require "lib.knauel"
@@ -11,7 +10,7 @@ local parser   = argparse()
   files making it simpler to share your setups or configure several small files.
 
   It utilizes the emacs org-mode tags \n#%+begin_src\n and \n#%+end_src\n .
-  Unlike org-mode this tags don't support parameters and being and end with a
+  Unlike org-mode this tags don't support parameters and begin and end with a
   line break.
 
   You can run your own custom functions to alter the file before its parsed by
@@ -37,7 +36,6 @@ if  args.version == true then
 	 os.exit()
 end
 
-
 -- Check if file exists, if not fall back to default file
 if (f.file_exists(path)) == false then
 	 io.write("error: file " .. path .. " not found.\n")
@@ -52,13 +50,22 @@ if (f.file_exists(path)) == false then
 end
 
 -- Read file
-local file = f.readall(path)
+file = f.readall(path)
+
+function execute_string_function(str)
+	 local fn, err = loadstring(str)
+	 if fn == nil then
+			error(err)
+	 else
+			return fn()
+	 end
+end
 
 local code = k.parse_text_between_tags(file, "\n#%+begin_code\n", "\n#%+end_code\n")
 if code  ~= "" then
 	 --io.write(code)
 	 io.write("code block found! executing code\n")
-	 local fn = k.execute_string_function(code)
+	 local fn = execute_string_function(code)
 	 io.write(fn())
 end
 

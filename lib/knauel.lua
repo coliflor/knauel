@@ -107,15 +107,6 @@ function knauel.clean_files(t_total, files, path, args)
 	 end
 end
 
-function knauel.execute_string_function(str)
-	 local fn, err = loadstring(str)
-	 if fn == nil then
-			error(err)
-	 else
-			return fn()
-	 end
-end
-
 function knauel.parse_text_between_tags(text, startTag, endTag)
 	 local startPos, endPos = string.find(text, startTag)
 	 if not startPos then

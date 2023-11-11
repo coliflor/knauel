@@ -1,7 +1,20 @@
 
 #+begin_code
-return function() print('empty file') file = "" end
+return function()
+function removeLinesWithPattern(text, pattern)
+    local lines = {}
+		for line in text:gmatch("([^\r\n]*)[\r\n]*") do
+        if not line:match("^" .. pattern) then
+            table.insert(lines, line)
+        end
+    end
+    return table.concat(lines, "\n")
+end
+file = removeLinesWithPattern(file, ";;")
+print(file)
+end
 #+end_code
+
 
 
 * Sample file
@@ -10,5 +23,6 @@ This an example on how to use Knauel
 
 #+begin_src
 [[~/.sample]]
+;; this is a comment that should get removed
 this is and example on how to use Knauel
 #+end_src
