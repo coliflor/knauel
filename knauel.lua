@@ -84,16 +84,14 @@ end
 local files = k.extract_data(t, t_total, file)
 
 
-local function containsDuplicate(table)
-    if #table < 2 then
-        return false  -- If the table has less than 2 elements, there can't be a duplicate
-    end
+function containsAnyDuplicate(table)
+    local n = #table
 
-    local firstElement = table[1]
-
-    for i = 2, #table do
-        if table[i] == firstElement then
-            return true  -- Found a duplicate
+    for i = 1, n - 1 do
+        for j = i + 1, n do
+            if table[i] == table[j] then
+                return true  -- Found a duplicate
+            end
         end
     end
 
@@ -105,7 +103,7 @@ for i = 1, t_total/2 do
 	 filenames[i] = f.filename(files[i][1])
 end
 
-if containsDuplicate(filenames) then
+if containsAnyDuplicate(filenames) then
 	 --h.print(filenames)
 	 print("warrning: there are duplicate filenames may produce unexpected side effects")
 end
