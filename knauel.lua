@@ -83,7 +83,6 @@ if t_total % 2  ~= 0 then
 end
 local files = k.extract_data(t, t_total, file)
 
-
 function containsAnyDuplicate(table)
     local n = #table
 
