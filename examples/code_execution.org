@@ -19,8 +19,8 @@ function replaceWord(text, targetWord, replacement)
     return text:gsub(pattern, replacement)
 end
 
-file = replaceLinesWithPattern(file, ";;", "")
 file = replaceLinesWithPattern(file, "##", "")
+file = replaceLinesWithPattern(file, "; ", "")
 
 file = replaceWord(file, "white" , '#ffffff')
 
@@ -36,7 +36,7 @@ This an example on how to use Knauel
 
 #+begin_src
 [[~/.sample]]
-;; this is a comment that should get removed
+; this is a comment that should get removed
 this is and example on how to use Knauel
 #+end_src
 

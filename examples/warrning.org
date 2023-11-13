@@ -1,0 +1,15 @@
+
+* Sample file
+
+This an example on how to use Knauel
+
+#+begin_src
+[[~/.sample]]
+this is and example on how to use Knauel
+#+end_src
+
+
+#+begin_src
+[[~/.sample]]
+this will produce a warrning
+#+end_src

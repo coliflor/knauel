@@ -1,6 +1,7 @@
 local argparse = require "lib.argparse"
+--local h        = require "lib.helper"
 local f        = require "lib.file"
-local k = require "lib.knauel"
+local k        = require "lib.knauel"
 
 local parser   = argparse()
    :name "knauel"
@@ -81,6 +82,33 @@ if t_total % 2  ~= 0 then
 	 os.exit()
 end
 local files = k.extract_data(t, t_total, file)
+
+
+local function containsDuplicate(table)
+    if #table < 2 then
+        return false  -- If the table has less than 2 elements, there can't be a duplicate
+    end
+
+    local firstElement = table[1]
+
+    for i = 2, #table do
+        if table[i] == firstElement then
+            return true  -- Found a duplicate
+        end
+    end
+
+    return false  -- No duplicate found
+end
+
+local filenames = {}
+for i = 1, t_total/2 do
+	 filenames[i] = f.filename(files[i][1])
+end
+
+if containsDuplicate(filenames) then
+	 --h.print(filenames)
+	 print("warrning: there are duplicate filenames may produce unexpected side effects")
+end
 
 if args.remove == true then
 	 k.clean_files(t_total, files, path, args)
